@@ -2,6 +2,7 @@
 import {
   BankAccount,
   InsufficientFundsError,
+  SynchronizationFailedError,
   TransferFailedError,
   getBankAccount,
 } from '.';
@@ -94,10 +95,22 @@ describe('BankAccount', () => {
   });
 
   test('should set new balance if fetchBalance returned number', async () => {
-    // Write test here
+    const initialBalance = 20000;
+    const newAccount = getBankAccount(initialBalance);
+    const newBalance = 5000;
+    jest.spyOn(newAccount, 'fetchBalance').mockResolvedValue(newBalance);
+    await newAccount.synchronizeBalance();
+
+    expect(newAccount.getBalance()).toBe(newBalance);
   });
 
   test('should throw SynchronizationFailedError if fetchBalance returned null', async () => {
-    // Write test here
+    const initialBalance = 20000;
+    const newAccount = getBankAccount(initialBalance);
+    jest.spyOn(newAccount, 'fetchBalance').mockResolvedValue(null);
+
+    await expect(newAccount.synchronizeBalance()).rejects.toThrow(
+      SynchronizationFailedError,
+    );
   });
 });
