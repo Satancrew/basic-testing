@@ -8,9 +8,9 @@ const testCases = [
   { a: 3, b: 2, action: Action.Add, expected: 5 },
 
   // Substract
-  { a: 10, b: 2, action: Action.Substract, expected: 8 },
-  { a: 12, b: 5, action: Action.Substract, expected: 7 },
-  { a: 7, b: 4, action: Action.Substract, expected: 3 },
+  { a: 10, b: 2, action: Action.Subtract, expected: 8 },
+  { a: 12, b: 5, action: Action.Subtract, expected: 7 },
+  { a: 7, b: 4, action: Action.Subtract, expected: 3 },
 
   // Multiply
   { a: 3, b: 2, action: Action.Multiply, expected: 6 },
@@ -36,7 +36,7 @@ const testCases = [
   // Invalid arguments
   { a: 'four', b: 2, action: Action.Add, expected: null },
   { a: 2, b: 'seven', action: Action.Divide, expected: null },
-  { a: 'three', b: 2, action: Action.Substract, expected: null },
+  { a: 'three', b: 2, action: Action.Subtract, expected: null },
 ];
 
 describe('simpleCalculator', () => {
