@@ -17,8 +17,8 @@ describe('BankAccount', () => {
     );
   });
 
-  test('should throw TransferFailedError error when transferring more than balance', () => {
-    // Write your code here
+  test('should throw error when transferring more than balance', () => {
+    // Write your test here
   });
 
   test('should throw error when transferring to the same account', () => {
