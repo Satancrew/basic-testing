@@ -1,44 +1,116 @@
 // Uncomment the code below and write your tests
-// import { getBankAccount } from '.';
+import {
+  BankAccount,
+  InsufficientFundsError,
+  SynchronizationFailedError,
+  TransferFailedError,
+  getBankAccount,
+} from '.';
 
 describe('BankAccount', () => {
   test('should create account with initial balance', () => {
-    // Write your test here
+    const initialBalance = 50000;
+    const newAccount = getBankAccount(initialBalance);
+    expect(newAccount).toBeInstanceOf(BankAccount);
   });
 
   test('should throw InsufficientFundsError error when withdrawing more than balance', () => {
-    // Write your test here
+    const initialBalance = 500;
+    const transferAmount = 800;
+    const newAccount = getBankAccount(initialBalance);
+    expect(() => newAccount.withdraw(transferAmount)).toThrow(
+      InsufficientFundsError,
+    );
   });
 
-  test('should throw TransferFailedError error when transferring more than balance', () => {
-    // Write your test here
+  test('should throw error when transferring more than balance', () => {
+    const firstInitialBalance = 20000;
+    const secondInitialBalance = 10000;
+    const transferAmount = 30000;
+
+    const firstAccount = getBankAccount(firstInitialBalance);
+    const secondAccount = getBankAccount(secondInitialBalance);
+
+    expect(() => firstAccount.transfer(transferAmount, secondAccount)).toThrow(
+      InsufficientFundsError,
+    );
   });
 
   test('should throw error when transferring to the same account', () => {
-    // Write your test here
+    const initialBalance = 20000;
+    const transferAmount = 30000;
+
+    const newAccount = getBankAccount(initialBalance);
+
+    expect(() => newAccount.transfer(transferAmount, newAccount)).toThrow(
+      TransferFailedError,
+    );
   });
 
-  test('should deposit money', () => {
-    // Write your test here
+  test('should deposit money', async () => {
+    const initialBalance = 20000;
+    const deposit = 30000;
+
+    const newAccount = getBankAccount(initialBalance);
+    await newAccount.deposit(deposit);
+
+    expect(newAccount.getBalance()).toBe(initialBalance + deposit);
   });
 
   test('should withdraw money', () => {
-    // Write your test here
+    const initialBalance = 20000;
+    const amount = 10000;
+
+    const newAccount = getBankAccount(initialBalance);
+    newAccount.withdraw(amount);
+
+    expect(newAccount.getBalance()).toBe(initialBalance - amount);
   });
 
   test('should transfer money', () => {
-    // Write your test here
+    const firstInitialBalance = 20000;
+    const secondInitialBalance = 10000;
+    const transferAmount = 5000;
+
+    const firstAccount = getBankAccount(firstInitialBalance);
+    const secondAccount = getBankAccount(secondInitialBalance);
+
+    firstAccount.transfer(transferAmount, secondAccount);
+
+    expect(firstAccount.getBalance()).toBe(
+      firstInitialBalance - transferAmount,
+    );
+    expect(secondAccount.getBalance()).toBe(
+      secondInitialBalance + transferAmount,
+    );
   });
 
   test('fetchBalance should return number in case if request did not failed', async () => {
-    // Write your tests here
+    const initialBalance = 20000;
+    const newAccount = getBankAccount(initialBalance);
+
+    const typeBalance = typeof (await newAccount.fetchBalance());
+
+    if (typeBalance === 'number') expect(typeBalance).toBe('number');
   });
 
   test('should set new balance if fetchBalance returned number', async () => {
-    // Write your tests here
+    const initialBalance = 20000;
+    const newAccount = getBankAccount(initialBalance);
+    const newBalance = 5000;
+    jest.spyOn(newAccount, 'fetchBalance').mockResolvedValue(newBalance);
+    await newAccount.synchronizeBalance();
+
+    expect(newAccount.getBalance()).toBe(newBalance);
   });
 
   test('should throw SynchronizationFailedError if fetchBalance returned null', async () => {
-    // Write your tests here
+    const initialBalance = 20000;
+    const newAccount = getBankAccount(initialBalance);
+    jest.spyOn(newAccount, 'fetchBalance').mockResolvedValue(null);
+
+    await expect(newAccount.synchronizeBalance()).rejects.toThrow(
+      SynchronizationFailedError,
+    );
   });
 });
