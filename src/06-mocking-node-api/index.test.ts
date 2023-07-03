@@ -1,4 +1,5 @@
 import fs from 'fs';
+import path, { join } from 'path';
 import { doStuffByTimeout, doStuffByInterval, readFileAsynchronously } from '.';
 
 describe('doStuffByTimeout', () => {
@@ -71,7 +72,10 @@ describe('doStuffByInterval', () => {
 
 describe('readFileAsynchronously', () => {
   test('should call join with pathToFile', async () => {
-    // Write your test here
+    const pathToFile = 'randomFile.txt';
+    jest.spyOn(path, 'join');
+    readFileAsynchronously(pathToFile);
+    expect(join).toBeCalled();
   });
 
   test('should return null if file does not exist', async () => {
